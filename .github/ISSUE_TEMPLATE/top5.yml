@@ -1,0 +1,39 @@
+name: Top 5 Problems
+description: Zgłoś swoje TOP5 problemów/zadań (personal/global)
+title: "TOP5: [krótki opis]"
+labels: ["top5","intake"]
+body:
+  - type: textarea
+    id: personal
+    attributes:
+      label: Twoje TOP5 (personal)
+      description: Jedno na linię. Co dziś realnie boli?
+      placeholder: |
+        1) ...
+        2) ...
+        3) ...
+        4) ...
+        5) ...
+    validations: { required: true }
+  - type: textarea
+    id: global
+    attributes:
+      label: TOP5 (global/system)
+  - type: input
+    id: effort
+    attributes:
+      label: Deklarowany wkład (czas/tydz.)
+      placeholder: "np. 3h/tydz."
+  - type: dropdown
+    id: skills
+    attributes:
+      label: Obszary/umiejętności
+      options: ["R&D","Data","Design","Product","Ops","Funding","Comms"]
+      multiple: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Zgody
+      options:
+        - label: Publiczne i licencja CC BY 4.0 — rozumiem
+          required: true

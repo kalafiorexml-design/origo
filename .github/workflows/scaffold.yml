@@ -1,0 +1,98 @@
+name: Scaffold
+on:
+  issue_comment:
+    types: [created]   # zadziała, gdy napiszesz komentarz "/scaffold"
+permissions:
+  contents: write
+  issues: read
+  pull-requests: write
+jobs:
+  make:
+    if: contains(github.event.comment.body, '/scaffold')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create skeleton
+        shell: bash
+        run: |
+          mkdir -p brand/origo protocol credentials/schemas governance website challenges/om1 scripts
+          [ -f README.md ] || cat > README.md <<'MD'
+          # ORIGO
+          learn by building · earn by contributing · govern by reputation
+          - **Origo U** — certyfikacja (OM1–OM5)
+          - **Origo Works** — projekty/kontrakty (OPC)
+          - **Origo Ledger** — księga reputacji i wkładu
+          - **Origo Agora** — głosowanie i zasady
+          - **Origo Lab / Atlas / Vault**
+          MD
+
+          cat > governance/GOVERNANCE.md <<'MD'
+          # ORIGO – konstytucja v0.1
+          Misja: uczyć przez budowanie, wynagradzać wkład, zarządzać reputacją.
+          Zasady: otwartość, weryfikowalność, śledzalność, brak uznaniowości.
+          Głosowanie: quadratic + próg OM≥2, wygasanie 20% mocy co 6 mies.
+          Weto etyczne Foundera (szkoda/bezpieczeństwo) — odwołalne ⅔ OM≥3.
+          MD
+
+          cat > protocol/OPC.md <<'MD'
+          # OPC – Origo Practice Credits
+          OPC = f(czas, jakość, wpływ, rzadkość, trudność). Zużycie: compute, granty, mentoring.
+          MD
+
+          mkdir -p credentials/schemas
+          cat > credentials/schemas/om_v1.json <<'JSON'
+          { "$schema":"https://json-schema.org/draft/2020-12/schema",
+            "title":"Origo Mastery","type":"object",
+            "required":["id","issuer","subject","level","evidence","issuedAt"],
+            "properties":{
+              "id":{"type":"string"},
+              "issuer":{"type":"string"},
+              "subject":{"type":"string"},
+              "level":{"type":"string","enum":["OM1","OM2","OM3","OM4","OM5"]},
+              "evidence":{"type":"array","items":{"type":"string"}},
+              "issuedAt":{"type":"string","format":"date-time"}
+          }}
+          JSON
+
+          mkdir -p challenges/om1
+          cat > challenges/om1/productivity.yml <<'YML'
+          id: om1-productivity-v1
+          title: "OM1: Jeden dzień – trzy artefakty"
+          rubric: {quality: 0.40, impact: 0.30, reliability: 0.20, mentoring: 0.10}
+          deliverables:
+            - "artefakt (commit .md/.py itp.)"
+            - "opis 5–10 zdań (README sekcja 'What I learned')"
+            - "PR z linkami i hashami (sha256)"
+          reward: {opc_min: 50, om_level: OM1}
+          YML
+
+          mkdir -p website
+          cat > website/index.html <<'HTML'
+          <!doctype html><meta charset="utf-8"><title>ORIGO</title>
+          <style>
+            body{margin:0;font:16px/1.5 system-ui;background:#0b1d2a;color:#f3e3c3}
+            header{padding:56px 20px;text-align:center}
+            input{width:min(700px,90%);padding:14px 16px;border:0;border-radius:12px}
+            .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1100px;margin:30px auto;padding:0 20px}
+            .card{background:#122636;border-radius:16px;padding:16px}
+            h2{margin:0 0 6px}
+          </style>
+          <header>
+            <h1>ORIGO</h1>
+            <p>learn by building · earn by contributing · govern by reputation</p>
+            <input placeholder="Na czym chcesz dziś pracować?">
+          </header>
+          <div class="grid">
+            <div class="card"><h2>Top-5 świata</h2><ul id="global"></ul></div>
+            <div class="card"><h2>Twoje Top-5</h2><ul id="personal"></ul></div>
+          </div>
+          <script>
+            const global=["AI for Science","Edukacja funkcjonalna","Zdrowie psychiczne twórców","Otwarte dane lokalne","Zielona energia"];
+            const personal=["3 artefakty dziennie","Compute pool","Funding Origo","Vault porządek","Angielski 15'"];
+            [document.getElementById('global'),document.getElementById('personal')]
+              .forEach((ul,i)=> (i?personal:global).forEach(x=>{const li=document.createElement('li');li.textContent=x;ul.append(li)}));
+          </script>
+          HTML
+      - uses: EndBug/add-and-commit@v9
+        with: { message: "chore: scaffold repo via bot", add: "." }

@@ -1,0 +1,20 @@
+{
+  "id": "opc-98455b441b07",
+  "subject": "did:origo:user:alpha",
+  "issuedAt": "2025-08-31T10:38:37Z",
+  "rubric": {
+    "quality": 0.8,
+    "impact": 0.6,
+    "reliability": 0.9,
+    "mentoring": 0.2
+  },
+  "work": {
+    "hours": 3.5,
+    "difficulty": 1.1,
+    "rarity": 1.0
+  },
+  "artifacts": [
+    "cd80df2df00a52d2a7eefa8dd04d5688255f59fe2eb1a414a8589c9580151228"
+  ],
+  "opc": 3
+}

@@ -1,0 +1,2 @@
+Example artifact for ORIGO Ledger MVP.
+This file's hash will be embedded in credentials.
